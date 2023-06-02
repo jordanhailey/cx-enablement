@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import 'focus-visible'
 import '@/styles/tailwind.css'
-const SITE_ID = process.env.CIO_SITE_ID
+const SITE_ID = process.env.CIO_SITE_ID;
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -28,6 +28,9 @@ export default function App({ Component, pageProps }) {
   return <>
   <Script id="cio-tracker" strategy="beforeInteractive">
       {`
+        let siteID = "${SITE_ID}";
+        const overrideSiteID = window.localStorage.getItem("CX_SITE_CIO_SITE_ID");
+        if (overrideSiteID && overrideSiteID != "") siteID = overrideSiteID;
         var _cio = _cio || [];
         (function() {
             var a,b,c;a=function(f){return function(){_cio.push([f].
@@ -37,7 +40,7 @@ export default function App({ Component, pageProps }) {
                 s = document.getElementsByTagName('script')[0];
             t.async = true;
             t.id    = 'cio-tracker';
-            t.setAttribute('data-site-id', '${SITE_ID}');
+            t.setAttribute('data-site-id', siteID);
             t.setAttribute('data-use-array-params', 'true');
             
             //Enables in-app messaging
