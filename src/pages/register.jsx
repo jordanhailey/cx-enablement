@@ -34,7 +34,6 @@ export default function Register() {
           </div>
         </div>
         <form
-          action="#"
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <TextField
