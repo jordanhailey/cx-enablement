@@ -1,9 +1,30 @@
 import Script from 'next/script';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import 'focus-visible'
 import '@/styles/tailwind.css'
 const SITE_ID = process.env.CIO_SITE_ID
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (window._cio) {
+        window._cio.page(window.location.href)
+      }
+    };
+  
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on('hashChangeComplete', handleRouteChange);
+  
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off('hashChangeComplete', handleRouteChange);
+    };
+  }, [router]);
+
   return <>
   <Script id="cio-tracker" strategy="beforeInteractive">
       {`
