@@ -6,9 +6,27 @@ import { Button } from '@/components/Button'
 import { SelectField, TextField } from '@/components/Fields'
 import { Logo } from '@/components/Logo'
 import { defaultLanguage, supportedLanguages } from '@/helpers/supportedLanguages'
+import { useRouter } from 'next/router'
 
 
 export default function Register() {
+  const router = useRouter();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const entries = {};
+    for (let [key,value] of data.entries()) {
+      // assign "username" field to identifier
+      key = key == "username" ? "id" : key;
+      if (key != "password") entries[key] = value;
+    }
+    if (typeof window !== "undefined" && window?._cio) {
+      window._cio.identify({...entries})
+      window.localStorage.setItem("CX_SITE_CIO_FIRST_NAME",entries.first_name)
+    }
+    router.push("/");
+  };
+
   return (
     <>
       <Head>
@@ -23,7 +41,7 @@ export default function Register() {
             <h2 className="text-lg font-semibold text-gray-900">
               Get started for free
             </h2>
-            <p className="mt-2 text-sm text-gray-700">
+            {/* <p className="mt-2 text-sm text-gray-700">
               Already registered?{' '}
               <Link
                 href="/login"
@@ -32,10 +50,11 @@ export default function Register() {
                 Sign in
               </Link>{' '}
               to your account.
-            </p>
+            </p> */}
           </div>
         </div>
         <form
+          onSubmit={handleSubmit}
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <TextField
@@ -44,7 +63,6 @@ export default function Register() {
             name="first_name"
             type="text"
             autoComplete="given-name"
-            required
           />
           <TextField
             label="Last name"
@@ -52,32 +70,32 @@ export default function Register() {
             name="last_name"
             type="text"
             autoComplete="family-name"
-            required
           />
           <TextField
             className="col-span-full"
             label="Email address"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
+            id="username"
+            name="username"
+            type="username"
+            autoComplete="username"
             required
           />
-          <TextField
+          {/* <TextField
             className="col-span-full"
             label="Password"
             id="password"
             name="password"
             type="password"
-            autoComplete="new-password"
+            autoComplete="password"
             required
-          />
+          /> */}
           <SelectField
             className="col-span-full"
             label="When we reach out to you, what language would you prefer?"
             id="language"
             name="language"
             defaultValue={defaultLanguage}
+            required
           >
             { supportedLanguages.map(lang=>{
               return <option key={lang.value} value={lang.value}>{lang.name}</option>
