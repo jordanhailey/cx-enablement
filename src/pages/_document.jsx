@@ -1,5 +1,4 @@
 import { Head, Html, Main, NextScript } from 'next/document'
-import { Analytics } from '@vercel/analytics/react';
 
 export default function Document(props) {
   let pageProps = props.__NEXT_DATA__?.props?.pageProps
@@ -24,7 +23,6 @@ export default function Document(props) {
       <body className="flex h-full flex-col">
         <Main />
         <NextScript />
-        <Analytics />
       </body>
     </Html>
   )

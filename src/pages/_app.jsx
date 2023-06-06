@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { CIOConfigProvider } from '@/components/CioConfigContext';
 import { CioTrackerSnippet } from '@/components/CioTrackerSnippet';
 import 'focus-visible'
@@ -25,8 +26,11 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
-  return <CIOConfigProvider>
-    <CioTrackerSnippet />
-    <Component {...pageProps} />
-  </CIOConfigProvider>
+  return <>
+    <CIOConfigProvider>
+      <CioTrackerSnippet />
+      <Component {...pageProps} />
+    </CIOConfigProvider>
+    <Analytics />
+    </>
 }
