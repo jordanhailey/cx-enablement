@@ -22,6 +22,7 @@
     "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
+    "@heroicons/react": "^2.0.18",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.2",
     "prettier": "^2.8.7",
