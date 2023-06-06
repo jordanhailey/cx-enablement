@@ -7,9 +7,17 @@ import { SelectField, TextField } from '@/components/Fields'
 import { Logo } from '@/components/Logo'
 import { defaultLanguage, supportedLanguages } from '@/helpers/supportedLanguages'
 import { useRouter } from 'next/router'
-
+import useConfig from '@/components/CioConfigContext'
+import { useEffect, useState } from 'react'
 
 export default function Register() {
+  const {siteID} = useConfig();
+  const [clientConfigSiteID,setClientConfigSiteID] = useState("");
+  const [homepage,setHomepage] = useState("");
+  useEffect(()=>{
+    setClientConfigSiteID(siteID)
+    typeof window !== "undefined" ? setHomepage(`${window.location.protocol}//${window.location.hostname}/`) : "example.com"
+  },[siteID])
   const router = useRouter();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,7 +32,7 @@ export default function Register() {
       window._cio.identify({...entries})
       window.localStorage.setItem("CX_SITE_CIO_FIRST_NAME",entries.first_name)
     }
-    router.push("/");
+    event.target.submit();
   };
 
   return (
@@ -55,6 +63,8 @@ export default function Register() {
         </div>
         <form
           onSubmit={handleSubmit}
+          method="POST"
+          action={`https://customerioforms.com/forms/submit_action?site_id=${clientConfigSiteID}&form_id=cio_cx_site&success_url=${homepage}`}
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <TextField
