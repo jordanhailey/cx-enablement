@@ -8,6 +8,7 @@ import logoStatamic from '@/images/logos/statamic.svg'
 import logoStaticKit from '@/images/logos/statickit.svg'
 import logoTransistor from '@/images/logos/transistor.svg'
 import logoTuple from '@/images/logos/tuple.svg'
+import { trackClickEvent } from '@/helpers/cioFunctions'
 
 export function Hero() {
   return (
@@ -37,6 +38,7 @@ export function Hero() {
           href="https://www.youtube.com/watch?v=bxlLOxdq8l4&pp=ygULY3VzdG9tZXIuaW8%3D"
           variant="outline"
           target="_blank"
+          onClick={(e)=>trackClickEvent("Clicked YouTube Video",{url:"https://www.youtube.com/watch?v=bxlLOxdq8l4&pp=ygULY3VzdG9tZXIuaW8%3D"})}
         >
           <svg
             aria-hidden="true"

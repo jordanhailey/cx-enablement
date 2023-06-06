@@ -7,13 +7,13 @@ import { Container } from '@/components/Container'
 import screenshotContacts from '@/images/screenshots/contacts.png'
 import screenshotInventory from '@/images/screenshots/inventory.png'
 import screenshotProfitLoss from '@/images/screenshots/profit-loss.png'
-
+import { trackClickEvent } from '@/helpers/cioFunctions'
 const features = [
   {
     name: 'Reporting',
     summary: 'Stay on top of things with always up-to-date reporting features.',
     description:
-      'We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.',
+    'We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.',
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
       let id = useId()
@@ -133,7 +133,7 @@ function FeaturesMobile() {
     <div className="-mx-4 mt-20 flex flex-col gap-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:hidden">
       {features.map((feature) => (
         <div key={feature.name}>
-          <Feature feature={feature} className="mx-auto max-w-2xl" isActive />
+          <Feature feature={feature} className="mx-auto max-w-2xl" isActive onClick={(e)=>trackClickEvent(`Clicked ${feature.name}`)} />
           <div className="relative mt-10 pb-10">
             <div className="absolute -inset-x-4 bottom-0 top-8 bg-slate-200 sm:-inset-x-6" />
             <div className="relative mx-auto w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
@@ -170,6 +170,7 @@ function FeaturesDesktop() {
                   ),
                 }}
                 isActive={featureIndex === selectedIndex}
+                onClick={(e)=>trackClickEvent(`Clicked ${feature.name}`)}
                 className="relative"
               />
             ))}

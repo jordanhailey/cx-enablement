@@ -2,6 +2,7 @@ import clsx from 'clsx'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { trackClickEvent } from '@/helpers/cioFunctions'
 
 function SwirlyDoodle({ className }) {
   return (
@@ -86,6 +87,7 @@ function Plan({ name, price, description, href, features, featured = false }) {
         color="white"
         className="mt-8"
         aria-label={`Get started with the ${name} plan for ${price}`}
+        onClick={(e) => trackClickEvent(`Clicked ${name} Pricing Button`)}
       >
         Get started
       </Button>

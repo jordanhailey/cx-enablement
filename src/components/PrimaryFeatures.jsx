@@ -9,6 +9,7 @@ import screenshotExpenses from '@/images/screenshots/expenses.png'
 import screenshotPayroll from '@/images/screenshots/payroll.png'
 import screenshotReporting from '@/images/screenshots/reporting.png'
 import screenshotVatReturns from '@/images/screenshots/vat-returns.png'
+import { trackClickEvent } from '@/helpers/cioFunctions'
 
 const features = [
   {
@@ -97,6 +98,9 @@ export function PrimaryFeatures() {
                           ? 'bg-white lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10'
                           : 'hover:bg-white/10 lg:hover:bg-white/5'
                       )}
+                      onClick={(e)=>{
+                        trackClickEvent(`clicked: ${feature.title}`)
+                      }}
                     >
                       <h3>
                         <Tab

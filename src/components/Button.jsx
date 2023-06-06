@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
+import { trackClickEvent } from '@/helpers/cioFunctions'
 
 const baseStyles = {
   solid:
