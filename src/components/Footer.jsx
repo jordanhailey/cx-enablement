@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Container } from '@/components/Container'
 import { Logo } from '@/components/Logo'
 import { NavLink } from '@/components/NavLink'
+import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 
 export function Footer() {
   return (
@@ -15,7 +16,8 @@ export function Footer() {
               <NavLink href="/#features">Features</NavLink>
               <NavLink href="/#testimonials">Testimonials</NavLink>
               <NavLink href="/#pricing">Pricing</NavLink>
-              <NavLink href="/configure">CIO Configuration</NavLink>
+              <NavLink href="/about">About</NavLink>
+              <NavLink href="/configure"><Cog6ToothIcon className='h-6 w-6 text-blue-600'/></NavLink>
             </div>
           </nav>
         </div>

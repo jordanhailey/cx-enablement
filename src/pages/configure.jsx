@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { SelectField, TextField } from '@/components/Fields'
 import useConfig from '@/components/CioConfigContext';
 import { useContext, useEffect, useState } from 'react';
@@ -251,6 +252,7 @@ export default function Configure() {
       </div>
     </div>
       </main>
+      <Footer/>
     </>
   )
 }

@@ -3,20 +3,31 @@ import Link from 'next/link'
 
 import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
-import { SelectField, TextField } from '@/components/Fields'
+import { SelectField, TextField, RadioSelect } from '@/components/Fields'
 import { Logo } from '@/components/Logo'
 import { defaultLanguage, supportedLanguages } from '@/helpers/supportedLanguages'
 import { useRouter } from 'next/router'
 import useConfig from '@/components/CioConfigContext'
 import { useEffect, useState } from 'react'
 
+const identifierMethods = [
+  {id: 'useID', title: 'ID'},
+  {id: 'useEmail', title: 'Email' }
+]
+const defaultIdenfierMethod = identifierMethods[0].id
+
 export default function Register() {
   const {siteID} = useConfig();
   const [clientConfigSiteID,setClientConfigSiteID] = useState("");
   const [homepage,setHomepage] = useState("");
+  const [selectedIdentifierMethod,setSelectedIdentifierMethod] = useState(defaultIdenfierMethod)
+
   useEffect(()=>{
-    setClientConfigSiteID(siteID)
-    typeof window !== "undefined" ? setHomepage(`${window.location.protocol}//${window.location.hostname}/`) : "example.com"
+    setClientConfigSiteID(siteID);
+    if (typeof window !== "undefined") {
+      if (window.location.hostname == "localhost") setHomepage(`${window.location.protocol}//${window.location.hostname}:${window.location.port}`)
+      else setHomepage(`${window.location.protocol}//${window.location.hostname}/`)
+    }
   },[siteID])
   const router = useRouter();
   const handleSubmit = async (event) => {
@@ -24,9 +35,10 @@ export default function Register() {
     const data = new FormData(event.target);
     const entries = {};
     for (let [key,value] of data.entries()) {
-      // assign "username" field to identifier
-      key = key == "username" ? "id" : key;
       if (key != "password") entries[key] = value;
+    }
+    if (!entries.id && entries.email && selectedIdentifierMethod == "useEmail") {
+      entries.id = entries.email
     }
     if (typeof window !== "undefined" && window?._cio) {
       window._cio.identify({...entries})
@@ -81,14 +93,33 @@ export default function Register() {
             type="text"
             autoComplete="family-name"
           />
+          <RadioSelect 
+            id={"use_id_as_identifier"} 
+            name={"use_id_as_identifier"} 
+            label={"Using ID or Email as identifier?"} 
+            className="col-span-full"
+            defaultChecked={selectedIdentifierMethod}
+            array={identifierMethods}
+            onChange={(e)=>setSelectedIdentifierMethod(e.target.id)}
+          />
+          <TextField
+            className="col-span-full"
+            label="Select a username"
+            id="id"
+            name="id"
+            type="text"
+            autoComplete="username"
+            required={selectedIdentifierMethod == identifierMethods[0].id}
+            disabled={selectedIdentifierMethod != identifierMethods[0].id}
+          />
           <TextField
             className="col-span-full"
             label="Email address"
-            id="username"
-            name="username"
-            type="username"
-            autoComplete="username"
-            required
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required={selectedIdentifierMethod == identifierMethods[1].id}
           />
           {/* <TextField
             className="col-span-full"
