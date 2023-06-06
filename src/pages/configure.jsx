@@ -113,10 +113,11 @@ export default function Configure() {
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">Customer.io Connection(s)</h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              The configuration on this page impacts your connection to Customer.io. ( <Link href={"https://www.customer.io/docs/sdk/web/getting-started/#configure-the-sdk"}>See the subheading "Configure The SDK"</Link>  ) This site is, by default, connected to a workspace managed by the Customer Experience team in Customer.io.
+              The configuration on this page impacts your connection to Customer.io. ( <Link href={"https://www.customer.io/docs/sdk/web/getting-started/#configure-the-sdk"} className='font-semibold text-blue-500' >see the subheading "Configure The SDK"</Link>  )
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              The form on this page will allow you to overwrite the connection to Customer.io's managed workspace and connect to your own within your current browser session. This change is enabled by storing and accessing values in your browser's "localStorage".
+              This site is, by default, not connected to any Customer.io workspace. The form on this page will 
+              allow you to create a connection to your own Customer.io workspace <span className='italic'>within your current browser session</span>. Once you clear your cache, or access this page with another browser, your connection is lost. This works by storing and accessing values in your browser's "localStorage".
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Here are the details of your current connection:
