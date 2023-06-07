@@ -50,10 +50,6 @@ export function SelectField({ id, label, className = '', ...props }) {
 }
 
 export function RadioSelect({ id, label,labelDesc, legendLabel, array, defaultChecked, className = '', ...props }) {
-  const [checked,setChecked] = useState(defaultChecked);
-  function updateCheckedState(checkedID) {
-    setChecked(checkedID)
-  }
   return (
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
@@ -70,6 +66,7 @@ export function RadioSelect({ id, label,labelDesc, legendLabel, array, defaultCh
                 defaultChecked={item.id == defaultChecked}
                 className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-600"
                 onChange={props.onChange}
+                value={item.value}
               />
               <label htmlFor={item.id} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                 {item.title}
