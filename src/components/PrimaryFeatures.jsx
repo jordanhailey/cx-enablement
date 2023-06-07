@@ -99,7 +99,7 @@ export function PrimaryFeatures() {
                           : 'hover:bg-white/10 lg:hover:bg-white/5'
                       )}
                       onClick={(e)=>{
-                        trackClickEvent(`clicked: ${feature.title}`)
+                        trackClickEvent(`Clicked: ${feature.title}`)
                       }}
                     >
                       <h3>
