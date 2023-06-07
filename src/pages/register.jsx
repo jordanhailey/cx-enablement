@@ -11,8 +11,8 @@ import useConfig from '@/components/CioConfigContext'
 import { useEffect, useState } from 'react'
 
 const identifierMethods = [
-  {id: 'useID', title: 'ID'},
-  {id: 'useEmail', title: 'Email' }
+  {id: 'useID', title: 'ID', value: "id"},
+  {id: 'useEmail', title: 'Email', value: "email" }
 ]
 const defaultIdenfierMethod = identifierMethods[0].id
 
@@ -94,8 +94,8 @@ export default function Register() {
             autoComplete="family-name"
           />
           <RadioSelect 
-            id={"use_id_as_identifier"} 
-            name={"use_id_as_identifier"} 
+            id={"identifier_type"} 
+            name={"identifier_type"} 
             label={"Using ID or Email as an identifier?"} 
             className="col-span-full"
             defaultChecked={selectedIdentifierMethod}
