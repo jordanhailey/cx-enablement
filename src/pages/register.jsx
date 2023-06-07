@@ -96,15 +96,22 @@ export default function Register() {
           <RadioSelect 
             id={"use_id_as_identifier"} 
             name={"use_id_as_identifier"} 
-            label={"Using ID or Email as identifier?"} 
+            label={"Using ID or Email as an identifier?"} 
             className="col-span-full"
             defaultChecked={selectedIdentifierMethod}
             array={identifierMethods}
-            onChange={(e)=>setSelectedIdentifierMethod(e.target.id)}
+            onChange={(e)=>{
+              setSelectedIdentifierMethod(e.target.id);
+              // remove value from id input;
+              if (e.target.id != identifierMethods[0].id) {
+                const idInput = document.querySelector("input#id");
+                idInput.value = "";
+              }
+            }}
           />
           <TextField
-            className="col-span-full"
-            label="Select a username"
+            className={`col-span-full${selectedIdentifierMethod != identifierMethods[0].id ? " hidden" : ""}`}
+            label="ID"
             id="id"
             name="id"
             type="text"
