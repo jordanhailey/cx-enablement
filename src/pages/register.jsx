@@ -35,7 +35,7 @@ export default function Register() {
     const data = new FormData(event.target);
     const entries = {};
     for (let [key,value] of data.entries()) {
-      entries[key] = value;
+      entries[key] = `${value}`.trim();
     }
     if (typeof window !== "undefined" && window?._cio) {
       // If using ID as identifier base64 encode the submitted email address
