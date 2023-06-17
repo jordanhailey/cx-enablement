@@ -37,11 +37,16 @@ export default function Register() {
     for (let [key,value] of data.entries()) {
       attributes[key] = `${value}`.trim();
     }
-    if (typeof window !== "undefined" && window?._cio) {
+    if (typeof window !== "undefined") {
       if (!attributes.id && attributes.email && selectedIdentifierMethod == "email") {
         attributes.id = attributes.email
       }
-      window._cio.identify({...attributes})
+      if (window?._cio) {
+        window._cio.identify({...attributes})
+      }
+      if (window?.analytics) {
+        window.analytics.identify(attributes.id,{...attributes})
+      }
     }
     event.target.submit();
   };

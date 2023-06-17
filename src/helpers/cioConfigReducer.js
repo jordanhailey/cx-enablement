@@ -3,14 +3,16 @@ export const configKeys = {
   region: "region",
   useArrayParams: "useArrayParams",
   trackPageViews: "trackPageViews",
-  inAppMessaging: "inAppMessaging"
+  inAppMessaging: "inAppMessaging",
+  cdpToken: "cdpToken"
 }
 export const localStorageConfigKeys = {
   siteID: "CX_SITE_CIO_SITE_ID",
   region: "CX_SITE_CIO_REGION",
   useArrayParams: "CX_SITE_CIO_USE_ARRAY_PARAMS",
   trackPageViews: "CX_SITE_CIO_PAGE_VIEWS",
-  inAppMessaging: "CX_SITE_CIO_IN_APP_ENABLED"
+  inAppMessaging: "CX_SITE_CIO_IN_APP_ENABLED",
+  cdpToken: "CX_SITE_CIO_CDP_TOKEN"
 }
 
 // Values set in .env file
@@ -19,6 +21,7 @@ const REGION = process.env.NEXT_PUBLIC_CIO_REGION_US != "false" ? "US" : "EU"; /
 const USE_ARRAY_PARAMS = process.env.NEXT_PUBLIC_CIO_USE_ARRAY_PARAMS || "true";
 const PAGE_VIEWS = process.env.NEXT_PUBLIC_CIO_PAGE_VIEWS || "false";
 const IN_APP_ENABLED = process.env.NEXT_PUBLIC_CIO_IN_APP_ENABLED || "false";
+const CDP_TOKEN = process.env.NEXT_PUBLIC_CIO_CDP_TOKEN || "YOUR_CDP_TOKEN";
 
 // Interactions with localStorage
 export function getLocalStorageValue(key="", fallbackValue="") {
@@ -41,13 +44,15 @@ const region = getLocalStorageValue(localStorageConfigKeys.region,REGION);
 const trackPageViews = getLocalStorageValue(localStorageConfigKeys.trackPageViews,PAGE_VIEWS);
 const useArrayParams = getLocalStorageValue(localStorageConfigKeys.useArrayParams,USE_ARRAY_PARAMS);
 const inAppMessaging = getLocalStorageValue(localStorageConfigKeys.inAppMessaging,IN_APP_ENABLED);
+const cdpToken = getLocalStorageValue(localStorageConfigKeys.cdpToken,CDP_TOKEN);
 
 export const initialCIOConfigState = {
     siteID,
     region,
     trackPageViews,
     useArrayParams,
-    inAppMessaging
+    inAppMessaging,
+    cdpToken
 }
 
 export const operationTypes = {
@@ -55,7 +60,8 @@ export const operationTypes = {
   region: "UPDATE_REGION",
   trackPageViews: "UPDATE_PAGE_TRACKING",
   useArrayParams: "UPDATE_USE_ARRAY_PARAMS",
-  inAppMessaging: "UPDATE_IN_APP_STATE"
+  inAppMessaging: "UPDATE_IN_APP_STATE",
+  cdpToken: "UPDATE_CDP_TOKEN",
 }
 
 export default function reducer(state, action) {
@@ -92,6 +98,12 @@ export default function reducer(state, action) {
         if (newState.inAppMessaging == inAppMessaging) break;
         updateLocalStorageValue(localStorageConfigKeys.inAppMessaging,inAppMessaging);
         newState.inAppMessaging = inAppMessaging;
+        break;
+      case operationTypes.cdpToken:
+        const cdpToken = op.cdpToken;
+        if (newState.cdpToken == cdpToken) break;
+        updateLocalStorageValue(localStorageConfigKeys.cdpToken,cdpToken);
+        newState.cdpToken = cdpToken;
         break;
       default:
         console.log("DEFAULT",{op,newState})

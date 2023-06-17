@@ -6,7 +6,7 @@ import useConfig from '@/components/CioConfigContext';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/Button';
 import Link from 'next/link';
-import { configKeys, getLocalStorageValue, localStorageConfigKeys, operationTypes, updateLocalStorageValue } from '@/helpers/cioConfigReducer';
+import { configKeys, getLocalStorageValue, localStorageConfigKeys, operationTypes } from '@/helpers/cioConfigReducer';
 
 export default function Configure() {
   const [clientConfigSiteID, setClientConfigSiteID] = useState("");
@@ -14,10 +14,11 @@ export default function Configure() {
   const [clientConfigTrackPageViews, setClientConfigTrackPageViews] = useState("");
   const [clientConfigInAppMessaging, setClientConfigInAppMessaging] = useState("");
   const [clientConfigUseArrayParams, setClientConfigUseArrayParams] = useState("");
+  const [clientConfigCDPToken, setClientConfigCDPToken] = useState("");
   const [configurePageRenderedClientSide, setConfigurePageRenderedClientSide] = useState(false);
 
 
-  const { siteID, region, trackPageViews, inAppMessaging, useArrayParams, setState, operations } = useConfig();
+  const { siteID, region, trackPageViews, inAppMessaging, useArrayParams, setState, cdpToken } = useConfig();
 
   const updateFormInput = async (event) => {
     event.preventDefault();
@@ -26,13 +27,17 @@ export default function Configure() {
     };
     let inputType = "select";
     let getValue = (e=event, inputType) => {
-      if (inputType == "text") return e?.target?.value;
+      if (inputType == "text") return e?.target?.value?.trim();
       else if (inputType == "select") return (e?.target?.options[`${e?.target?.options?.selectedIndex}`]?.value)
     }
     switch (event.target.name) {
       case configKeys.siteID:
         inputType = "text";
         fn = setClientConfigSiteID;
+        break;
+      case configKeys.cdpToken:
+        inputType = "text";
+        fn = setClientConfigCDPToken;
         break;
       case configKeys.region:
         fn = setClientConfigRegion;
@@ -46,6 +51,7 @@ export default function Configure() {
       case configKeys.useArrayParams:
         fn = setClientConfigUseArrayParams;
         break;
+      
       default:
         break;
     }
@@ -72,12 +78,14 @@ export default function Configure() {
     let currentTrackPageViews = getLocalStorageValue(localStorageConfigKeys.trackPageViews,clientConfigTrackPageViews);
     let currentInAppMessaging = getLocalStorageValue(localStorageConfigKeys.inAppMessaging,clientConfigInAppMessaging);
     let currentUseArrayParams = getLocalStorageValue(localStorageConfigKeys.useArrayParams,clientConfigUseArrayParams);
+    let currentCDPToken = getLocalStorageValue(localStorageConfigKeys.cdpToken,clientConfigCDPToken);
     const ops = [
       {type:`${operationTypes.siteID}`,siteID:currentSiteID},
       {type:`${operationTypes.region}`,region:currentRegion},
       {type:`${operationTypes.trackPageViews}`,trackPageViews:currentTrackPageViews},
       {type:`${operationTypes.inAppMessaging}`,inAppMessaging:currentInAppMessaging},
       {type:`${operationTypes.useArrayParams}`,useArrayParams:currentUseArrayParams},
+      {type:`${operationTypes.cdpToken}`,cdpToken:currentCDPToken},
     ];
     if (renderDelay) {
       clearTimeout(renderDelay)
@@ -94,8 +102,9 @@ export default function Configure() {
     setClientConfigTrackPageViews(trackPageViews);
     setClientConfigInAppMessaging(inAppMessaging);
     setClientConfigUseArrayParams(useArrayParams);
+    setClientConfigCDPToken(cdpToken);
     setConfigurePageRenderedClientSide(true);
-  },[ siteID, region, trackPageViews, inAppMessaging, useArrayParams ]);
+  },[ siteID, region, trackPageViews, inAppMessaging, useArrayParams, cdpToken ]);
 
   return (
     <>
@@ -193,6 +202,15 @@ export default function Configure() {
                   { clientConfigInAppMessaging == "true" ? "Enabled" : "Disabled" } <span className='text-red-400'>{ clientConfigInAppMessaging != inAppMessaging ? "( not saved )" : "" }</span>
                 </dd>
               </div>
+              <div className="flex gap-x-4">
+                <dt className="flex-none">
+                  <span className="sr-only">CDP Token</span>
+                  CDP Token:
+                </dt>
+                <dd>
+                  { clientConfigCDPToken } <span className='text-red-400'>{ clientConfigCDPToken != cdpToken ? "( not saved )" : "" }</span>
+                </dd>
+              </div>
             </dl>
           </div>
         </div>
@@ -209,6 +227,16 @@ export default function Configure() {
                 value={ clientConfigSiteID }
                 onChange={ updateFormInput }
                 required
+                />
+              <TextField
+                className="col-span-full"
+                label="Customer.io CDP Token"
+                id="cdpToken"
+                name="cdpToken"
+                type="text"
+                autoComplete="cdpToken"
+                value={ clientConfigCDPToken }
+                onChange={ updateFormInput }
                 />
               <SelectField
                 className=""
