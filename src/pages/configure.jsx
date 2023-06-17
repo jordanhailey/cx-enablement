@@ -226,7 +226,6 @@ export default function Configure() {
                 autoComplete="siteID"
                 value={ clientConfigSiteID }
                 onChange={ updateFormInput }
-                required
                 />
               <TextField
                 className="col-span-full"

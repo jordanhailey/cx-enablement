@@ -14,7 +14,9 @@ export default function App({ Component, pageProps }) {
     const handleRouteChange = (url) => {
       if (window._cio) {
         if (`${window.localStorage.getItem(localStorageConfigKeys.trackPageViews)}` != "true") return
-        window._cio.page(window.location.href,{trackingType:"manual"})
+        if (window._cio?.page){
+          window._cio.page(window.location.href,{trackingType:"manual"})
+        }
         if (window.analytics) {
           window.analytics.page(window.location.href,{trackingType:"manual"})
             // .then(function clicked(e){ // optionally, do something after event was sent
