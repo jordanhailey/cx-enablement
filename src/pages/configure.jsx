@@ -6,7 +6,7 @@ import useConfig from '@/components/CioConfigContext';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/Button';
 import Link from 'next/link';
-import { configKeys, operationTypes } from '@/helpers/cioConfigReducer';
+import { configKeys, getLocalStorageValue, localStorageConfigKeys, operationTypes, updateLocalStorageValue } from '@/helpers/cioConfigReducer';
 
 export default function Configure() {
   const [clientConfigSiteID, setClientConfigSiteID] = useState("");
@@ -14,6 +14,9 @@ export default function Configure() {
   const [clientConfigTrackPageViews, setClientConfigTrackPageViews] = useState("");
   const [clientConfigInAppMessaging, setClientConfigInAppMessaging] = useState("");
   const [clientConfigUseArrayParams, setClientConfigUseArrayParams] = useState("");
+  const [configurePageRenderedClientSide, setConfigurePageRenderedClientSide] = useState(false);
+
+
   const { siteID, region, trackPageViews, inAppMessaging, useArrayParams, setState, operations } = useConfig();
 
   const updateFormInput = async (event) => {
@@ -53,10 +56,8 @@ export default function Configure() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const entries = {};
     const ops = [];
     for (const [key,value] of data.entries()) {
-      entries[key] = value;
       let op = operationTypes[key];
       ops.push({type:op,[`${key}`]:value})
     }
@@ -64,6 +65,28 @@ export default function Configure() {
     window.location.hash = "configuration";
     window.location.reload();
   };
+  let renderDelay;
+  useEffect(()=>{
+    let currentSiteID = getLocalStorageValue(localStorageConfigKeys.siteID,clientConfigSiteID);
+    let currentRegion = getLocalStorageValue(localStorageConfigKeys.region,clientConfigRegion);
+    let currentTrackPageViews = getLocalStorageValue(localStorageConfigKeys.trackPageViews,clientConfigTrackPageViews);
+    let currentInAppMessaging = getLocalStorageValue(localStorageConfigKeys.inAppMessaging,clientConfigInAppMessaging);
+    let currentUseArrayParams = getLocalStorageValue(localStorageConfigKeys.useArrayParams,clientConfigUseArrayParams);
+    const ops = [
+      {type:`${operationTypes.siteID}`,siteID:currentSiteID},
+      {type:`${operationTypes.region}`,region:currentRegion},
+      {type:`${operationTypes.trackPageViews}`,trackPageViews:currentTrackPageViews},
+      {type:`${operationTypes.inAppMessaging}`,inAppMessaging:currentInAppMessaging},
+      {type:`${operationTypes.useArrayParams}`,useArrayParams:currentUseArrayParams},
+    ];
+    if (renderDelay) {
+      clearTimeout(renderDelay)
+    }
+    renderDelay = setTimeout(()=>{
+      setState(ops);
+    },500)
+  },[ configurePageRenderedClientSide ]);
+  
   
   useEffect(()=>{
     setClientConfigSiteID(siteID);
@@ -71,6 +94,7 @@ export default function Configure() {
     setClientConfigTrackPageViews(trackPageViews);
     setClientConfigInAppMessaging(inAppMessaging);
     setClientConfigUseArrayParams(useArrayParams);
+    setConfigurePageRenderedClientSide(true);
   },[ siteID, region, trackPageViews, inAppMessaging, useArrayParams ]);
 
   return (

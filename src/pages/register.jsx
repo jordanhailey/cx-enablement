@@ -11,8 +11,7 @@ import useConfig from '@/components/CioConfigContext'
 import { useEffect, useState } from 'react'
 
 const identifierMethods = [
-  {id: 'useID', title: 'ID', value: "id"},
-  {id: 'useEmail', title: 'Email', value: "email" }
+  {id: 'email', title: 'Email', value: "email" }  
 ]
 const defaultIdenfierMethod = identifierMethods[0].id
 
@@ -35,14 +34,12 @@ export default function Register() {
     const data = new FormData(event.target);
     const entries = {};
     for (let [key,value] of data.entries()) {
-      if (key != "password") entries[key] = value;
-    }
-    if (!entries.id && entries.email && selectedIdentifierMethod == "useEmail") {
-      entries.id = entries.email
+      entries[key] = value;
     }
     if (typeof window !== "undefined" && window?._cio) {
-      window._cio.identify({...entries})
-      window.localStorage.setItem("CX_SITE_CIO_FIRST_NAME",entries.first_name)
+      const attributes = {};
+      const {email:id, ...rest} = entries;
+      window._cio.identify({id, ...rest})
     }
     event.target.submit();
   };
@@ -75,10 +72,19 @@ export default function Register() {
         </div>
         <form
           onSubmit={handleSubmit}
+          id='registration-form'
           method="POST"
-          action={`https://customerioforms.com/forms/submit_action?site_id=${clientConfigSiteID}&form_id=cio_cx_site&success_url=${homepage}`}
+          action={`https://customerioforms.com/forms/submit_action?site_id=${clientConfigSiteID}&form_id=cio_cx_site_register&success_url=${homepage}`}
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
+          <TextField
+            label="Form Name"
+            id="cio_cx_site_register_form_location"
+            name="cio_cx_site_register_form_location"
+            type="text"
+            defaultValue="/register"
+            className='top-0 left-0 sr-only disabled'
+          />
           <TextField
             label="First name"
             id="first_name"
@@ -93,32 +99,6 @@ export default function Register() {
             type="text"
             autoComplete="family-name"
           />
-          <RadioSelect 
-            id={"identifier_type"} 
-            name={"identifier_type"} 
-            label={"Using ID or Email as an identifier?"} 
-            className="col-span-full"
-            defaultChecked={selectedIdentifierMethod}
-            array={identifierMethods}
-            onChange={(e)=>{
-              setSelectedIdentifierMethod(e.target.id);
-              // remove value from id input;
-              if (e.target.id != identifierMethods[0].id) {
-                const idInput = document.querySelector("input#id");
-                idInput.value = "";
-              }
-            }}
-          />
-          <TextField
-            className={`col-span-full${selectedIdentifierMethod != identifierMethods[0].id ? " hidden" : ""}`}
-            label="ID"
-            id="id"
-            name="id"
-            type="text"
-            autoComplete="username"
-            required={selectedIdentifierMethod == identifierMethods[0].id}
-            disabled={selectedIdentifierMethod != identifierMethods[0].id}
-          />
           <TextField
             className="col-span-full"
             label="Email address"
@@ -126,17 +106,8 @@ export default function Register() {
             name="email"
             type="email"
             autoComplete="email"
-            required={selectedIdentifierMethod == identifierMethods[1].id}
+            required={selectedIdentifierMethod == identifierMethods[0].id}
           />
-          {/* <TextField
-            className="col-span-full"
-            label="Password"
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="password"
-            required
-          /> */}
           <SelectField
             className="col-span-full"
             label="When we reach out to you, what language would you prefer?"

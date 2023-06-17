@@ -5,7 +5,7 @@ export const configKeys = {
   trackPageViews: "trackPageViews",
   inAppMessaging: "inAppMessaging"
 }
-const localStorageConfigKeys = {
+export const localStorageConfigKeys = {
   siteID: "CX_SITE_CIO_SITE_ID",
   region: "CX_SITE_CIO_REGION",
   useArrayParams: "CX_SITE_CIO_USE_ARRAY_PARAMS",
@@ -14,11 +14,11 @@ const localStorageConfigKeys = {
 }
 
 // Values set in .env file
-const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID;
+const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID || "YOUR_SITE_ID";
 const REGION = process.env.NEXT_PUBLIC_CIO_REGION_US != "false" ? "US" : "EU"; // accepts any value, other than false or "false"
-const USE_ARRAY_PARAMS = process.env.NEXT_PUBLIC_CIO_USE_ARRAY_PARAMS;
-const PAGE_VIEWS = process.env.NEXT_PUBLIC_CIO_PAGE_VIEWS;
-const IN_APP_ENABLED = process.env.NEXT_PUBLIC_CIO_IN_APP_ENABLED;
+const USE_ARRAY_PARAMS = process.env.NEXT_PUBLIC_CIO_USE_ARRAY_PARAMS || "true";
+const PAGE_VIEWS = process.env.NEXT_PUBLIC_CIO_PAGE_VIEWS || "false";
+const IN_APP_ENABLED = process.env.NEXT_PUBLIC_CIO_IN_APP_ENABLED || "false";
 
 // Interactions with localStorage
 export function getLocalStorageValue(key="", fallbackValue="") {
