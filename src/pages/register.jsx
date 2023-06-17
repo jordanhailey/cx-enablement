@@ -11,6 +11,7 @@ import useConfig from '@/components/CioConfigContext'
 import { useEffect, useState } from 'react'
 
 const identifierMethods = [
+  {id: 'id', title: 'ID', value: "id"},
   {id: 'email', title: 'Email', value: "email" }  
 ]
 const defaultIdenfierMethod = identifierMethods[0].id
@@ -37,9 +38,9 @@ export default function Register() {
       entries[key] = value;
     }
     if (typeof window !== "undefined" && window?._cio) {
-      const attributes = {};
-      const {email:id, ...rest} = entries;
-      window._cio.identify({id, ...rest})
+      // If using ID as identifier base64 encode the submitted email address
+      const id = entries.identifier_type == "id" ? btoa(entries.email) : entries.email;
+      window._cio.identify({...entries,id})
     }
     event.target.submit();
   };
@@ -99,6 +100,17 @@ export default function Register() {
             type="text"
             autoComplete="family-name"
           />
+          <RadioSelect 
+            id={"identifier_type"} 
+            name={"identifier_type"} 
+            label={"Using ID or Email as an identifier?"} 
+            className="col-span-full"
+            defaultChecked={selectedIdentifierMethod}
+            array={identifierMethods}
+            onChange={(e)=>{
+              setSelectedIdentifierMethod(e.target.id);
+            }}
+          />
           <TextField
             className="col-span-full"
             label="Email address"
@@ -106,7 +118,7 @@ export default function Register() {
             name="email"
             type="email"
             autoComplete="email"
-            required={selectedIdentifierMethod == identifierMethods[0].id}
+            required
           />
           <SelectField
             className="col-span-full"
