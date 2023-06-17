@@ -10,17 +10,17 @@ import { useRouter } from 'next/router'
 import useConfig from '@/components/CioConfigContext'
 import { useEffect, useState } from 'react'
 
-const identifierMethods = [
-  {id: 'id', title: 'ID', value: "id"},
-  {id: 'email', title: 'Email', value: "email" }  
-]
-const defaultIdenfierMethod = identifierMethods[0].id
+const identifierMethods = {
+  "idIdentifier": {id: 'id', title: 'ID', value: "id", type: "text"},
+  "emailIdentifier": {id: 'email', title: 'Email', value: "email", type: "email" }  
+}
+const {idIdentifier , emailIdentifier} = identifierMethods
 
 export default function Register() {
   const {siteID} = useConfig();
   const [clientConfigSiteID,setClientConfigSiteID] = useState("");
   const [homepage,setHomepage] = useState("");
-  const [selectedIdentifierMethod,setSelectedIdentifierMethod] = useState(defaultIdenfierMethod)
+  const [selectedIdentifierMethod,setSelectedIdentifierMethod] = useState(idIdentifier.id)
 
   useEffect(()=>{
     setClientConfigSiteID(siteID);
@@ -33,14 +33,15 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const entries = {};
+    const attributes = {};
     for (let [key,value] of data.entries()) {
-      entries[key] = `${value}`.trim();
+      attributes[key] = `${value}`.trim();
     }
     if (typeof window !== "undefined" && window?._cio) {
-      // If using ID as identifier base64 encode the submitted email address
-      const id = entries.identifier_type == "id" ? btoa(entries.email) : entries.email;
-      window._cio.identify({...entries,id})
+      if (!attributes.id && attributes.email && selectedIdentifierMethod == "email") {
+        attributes.id = attributes.email
+      }
+      window._cio.identify({...attributes})
     }
     event.target.submit();
   };
@@ -75,7 +76,7 @@ export default function Register() {
           onSubmit={handleSubmit}
           id='registration-form'
           method="POST"
-          action={`https://customerioforms.com/forms/submit_action?site_id=${clientConfigSiteID}&form_id=cio_cx_site_register&success_url=${homepage}`}
+          action={`https://customerioforms.com/forms/submit_action?site_id=${clientConfigSiteID}&form_id=cio_cx_site_register_with_${selectedIdentifierMethod}&success_url=${homepage}`}
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <TextField
@@ -106,19 +107,34 @@ export default function Register() {
             label={"Using ID or Email as an identifier?"} 
             className="col-span-full"
             defaultChecked={selectedIdentifierMethod}
-            array={identifierMethods}
+            array={[idIdentifier,emailIdentifier]}
             onChange={(e)=>{
               setSelectedIdentifierMethod(e.target.id);
+              // remove value from id input;
+              if (e.target.id != idIdentifier.id) {
+                const idInput = document.querySelector(`input#${idIdentifier.id}`);
+                idInput.value = "";
+              }
             }}
           />
           <TextField
+            className={`col-span-full${selectedIdentifierMethod != idIdentifier.id ? " hidden" : ""}`}
+            label={idIdentifier.title}
+            id={idIdentifier.id}
+            name={`${selectedIdentifierMethod == idIdentifier.id ? "" : "registration_"}${idIdentifier.id}`}
+            type={idIdentifier.type}
+            autoComplete={idIdentifier.id}
+            required={selectedIdentifierMethod == idIdentifier.id}
+            disabled={selectedIdentifierMethod != idIdentifier.id}
+          />
+          <TextField
             className="col-span-full"
-            label="Email address"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
+            label={emailIdentifier.title}
+            id={emailIdentifier.id}
+            name={`${selectedIdentifierMethod == emailIdentifier.id ? "" : "registration_"}${emailIdentifier.id}`}
+            type={emailIdentifier.type}
+            autoComplete={emailIdentifier.id}
+            required={selectedIdentifierMethod == emailIdentifier.id}
           />
           <SelectField
             className="col-span-full"
