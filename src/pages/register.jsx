@@ -41,14 +41,20 @@ export default function Register() {
       if (!attributes.id && attributes.email && selectedIdentifierMethod == "email") {
         attributes.id = attributes.email
       }
-      if (window?._cio) {
-        window._cio.identify({...attributes})
-      }
-      if (window?.analytics) {
-        window.analytics.identify(attributes.id,{...attributes})
+      try {
+        if (window?._cio?.identify) {
+          window._cio.identify({...attributes})
+        }
+        if (window?.analytics?.identify) {
+          window.analytics.identify(attributes.id,{...attributes})
+        }
+        if (window?._cio?.identify) event.target.submit(); // Don't submit form if _cio SITE_ID is not set
+        else throw "Check Site ID"
+      } catch (e) {
+        alert("Cannot submit form, check your configuration")
+        console.error(e)
       }
     }
-    event.target.submit();
   };
 
   return (
