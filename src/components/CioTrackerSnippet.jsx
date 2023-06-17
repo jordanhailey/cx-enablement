@@ -23,27 +23,29 @@ export function CioTrackerSnippet() {
           if (overrideUseArrayParams && overrideUseArrayParams != "") useArrayParams = overrideUseArrayParams;
 
           var _cio = _cio || [];
-          (function() {
-              var a,b,c;a=function(f){return function(){_cio.push([f].
-              concat(Array.prototype.slice.call(arguments,0)))}};b=["load","identify",
-              "sidentify","track","page","on","off"];for(c=0;c<b.length;c++){_cio[b[c]]=a(b[c])};
-              var t = document.createElement('script'),
-                  s = document.getElementsByTagName('script')[0];
-              t.async = true;
-              t.id    = 'cio-tracker';
-              t.setAttribute('data-site-id', siteID);
-              t.setAttribute('data-use-array-params', useArrayParams);
-              
-              //Page Tracking
-              t.setAttribute('data-auto-track-page', trackPageViews);
-              
-              //Enables in-app messaging
-              t.setAttribute('data-use-in-app', inAppMessaging);
-
-              if (region != "EU" ) t.src = 'https://assets.customer.io/assets/track.js';
-              else t.src = 'https://assets.customer.io/assets/track-eu.js' // Will connect with EU datacenter if your account is in the EU region
-              s.parentNode.insertBefore(t, s);
-          })();
+          if (siteID != "" && siteID != "YOUR_API_TOKEN") {
+              (function() {
+                  var a,b,c;a=function(f){return function(){_cio.push([f].
+                  concat(Array.prototype.slice.call(arguments,0)))}};b=["load","identify",
+                  "sidentify","track","page","on","off"];for(c=0;c<b.length;c++){_cio[b[c]]=a(b[c])};
+                  var t = document.createElement('script'),
+                      s = document.getElementsByTagName('script')[0];
+                  t.async = true;
+                  t.id    = 'cio-tracker';
+                  t.setAttribute('data-site-id', siteID);
+                  t.setAttribute('data-use-array-params', useArrayParams);
+                  
+                  //Page Tracking
+                  t.setAttribute('data-auto-track-page', trackPageViews);
+                  
+                  //Enables in-app messaging
+                  t.setAttribute('data-use-in-app', inAppMessaging);
+    
+                  if (region != "EU" ) t.src = 'https://assets.customer.io/assets/track.js';
+                  else t.src = 'https://assets.customer.io/assets/track-eu.js' // Will connect with EU datacenter if your account is in the EU region
+                  s.parentNode.insertBefore(t, s);
+              })();
+          }
     `}
     </Script>
 }
