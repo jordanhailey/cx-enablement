@@ -1,5 +1,5 @@
 import { createContext, useReducer, useContext, useEffect } from "react";
-import configReducer, { initialCIOConfigState, operationTypes, operations } from "@/helpers/cioConfigReducer"
+import configReducer, { initialCIOConfigState, operations } from "@/helpers/cioConfigReducer"
 
 const CioConfigContext = createContext(initialCIOConfigState);
 

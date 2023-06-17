@@ -5,12 +5,14 @@ import { CIOConfigProvider } from '@/components/CioConfigContext';
 import { CioTrackerSnippet } from '@/components/CioTrackerSnippet';
 import 'focus-visible'
 import '@/styles/tailwind.css'
+import { localStorageConfigKeys } from '@/helpers/cioConfigReducer';
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url) => {
       if (window._cio) {
+        if (`${window.localStorage.getItem(localStorageConfigKeys.trackPageViews)}` != "true") return
         window._cio.page(window.location.href,{trackingType:"manual"})
       }
     };
