@@ -23,7 +23,7 @@ export function CioTrackerSnippet() {
           if (overrideUseArrayParams && overrideUseArrayParams != "") useArrayParams = overrideUseArrayParams;
 
           var _cio = _cio || [];
-          if (siteID != "" && siteID != "YOUR_API_TOKEN") {
+          if (siteID != "" && siteID != "YOUR_SITE_ID") {
               (function() {
                   var a,b,c;a=function(f){return function(){_cio.push([f].
                   concat(Array.prototype.slice.call(arguments,0)))}};b=["load","identify",

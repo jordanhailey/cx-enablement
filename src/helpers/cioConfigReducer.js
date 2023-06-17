@@ -16,7 +16,7 @@ export const localStorageConfigKeys = {
 }
 
 // Values set in .env file
-const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID || "YOUR_API_TOKEN";
+const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID || "YOUR_SITE_ID";
 const REGION = process.env.NEXT_PUBLIC_CIO_REGION_US != "false" ? "US" : "EU"; // accepts any value, other than false or "false"
 const USE_ARRAY_PARAMS = process.env.NEXT_PUBLIC_CIO_USE_ARRAY_PARAMS || "true";
 const PAGE_VIEWS = process.env.NEXT_PUBLIC_CIO_PAGE_VIEWS || "false";
