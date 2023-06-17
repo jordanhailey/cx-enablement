@@ -16,12 +16,12 @@ export const localStorageConfigKeys = {
 }
 
 // Values set in .env file
-const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID || "YOUR_SITE_ID";
+const SITE_ID = process.env.NEXT_PUBLIC_CIO_SITE_ID || "";
 const REGION = process.env.NEXT_PUBLIC_CIO_REGION_US != "false" ? "US" : "EU"; // accepts any value, other than false or "false"
 const USE_ARRAY_PARAMS = process.env.NEXT_PUBLIC_CIO_USE_ARRAY_PARAMS || "true";
 const PAGE_VIEWS = process.env.NEXT_PUBLIC_CIO_PAGE_VIEWS || "false";
 const IN_APP_ENABLED = process.env.NEXT_PUBLIC_CIO_IN_APP_ENABLED || "false";
-const CDP_TOKEN = process.env.NEXT_PUBLIC_CIO_CDP_TOKEN || "YOUR_CDP_TOKEN";
+const CDP_TOKEN = process.env.NEXT_PUBLIC_CIO_CDP_TOKEN || "";
 
 // Interactions with localStorage
 export function getLocalStorageValue(key="", fallbackValue="") {
